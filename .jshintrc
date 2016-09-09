@@ -1,0 +1,24 @@
+{
+  "unused": true,
+  "undef": true,
+  "eqnull": true,
+  "debug": false,
+  "forin": true,
+  "noarg": true,
+  "boss": true,
+  "loopfunc": false,
+  "evil": false,
+  "bitwise": true,
+  "nonew": false,
+  "browser": true,
+  "devel": true,
+  "laxcomma" : true,
+  "laxbreak" : true,
+  "newcap" : false,
+  "globals" : {
+    "define" : false,
+    "_" : false,
+    "require" : false,
+    "$" : false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "webpack-mockapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.10",
+    "grunt": "^1.0.1",
+    "grunt-browser-sync": "^2.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-less": "^1.4.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "gulp": "^3.9.1",
+    "load-grunt-tasks": "^3.5.2",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.1",
+    "webpack-merge": "^0.14.1"
+  }
+}
