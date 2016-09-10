@@ -37,13 +37,7 @@ function resetWebpackConfiguration() {
         // setting the output path
         output : {
             path : BUILD_DIR
-        },
-        plugins : [
-            new webpack.optimize.CommonsChunkPlugin({
-                name : "vendor",
-                async : true
-            })
-        ]
+        }
     };
     WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, MAIN_CONFIGURATION);
     if (TARGET === "development") {

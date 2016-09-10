@@ -4,7 +4,7 @@ define(function(require) {
         homeTemplate = require("text!homeTemplatePath/home.template.html"),
         BoxComponent = require("homeBoxComponent"),
         CircleComponent = require("homeCircleComponent");
-
+        
     var homeView = Backbone.View.extend({
         initialize : function() {
 

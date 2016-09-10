@@ -1,14 +1,18 @@
+var webpack = require("webpack");
+
 module.exports = {
     entry : {
-        vendor : ["jquery", "backbone", "underscore", "highcharts"]
+        vendors : ["jquery", "backbone", "underscore", "highcharts"]
     },
     resolve : {
         alias : {
             "jquery" : "assets/js/vendor/jquery.min",
-            "backbone" : "assets/js/vendor/backbone",
             "underscore" : "assets/js/vendor/underscore",
-            "highcharts" : "assets/js/vendor/highcharts"
-        }
+            "backbone" : "assets/js/vendor/backbone"
+        },
+        moduleDirectories : [
+            "assets/js/vendor"
+        ]
     },
     resolveLoader : {
         alias : {
@@ -18,19 +22,15 @@ module.exports = {
     },
     // shim for common
     module : {
-        loaders : [
-            {
-                "test" : /backbone/,
-                "loader" : 'exports?Backbone!imports?jquery,underscore'
-            },
-            {
-                "test" : /underscore/,
-                "loader": 'exports?_'
-            },
-            {
-                "test" : /highcharts/,
-                "loader" : 'exports?Highcharts!imports?jquery'
-            }
+        noParse : [
+            "highcharts", "underscore", "backbone", "jquery"
         ]
-    }
+    },
+    plugins : [
+        new webpack.ProvidePlugin({
+            $ : "jquery",
+            jQuery : "jquery",
+            Highcharts : "highcharts"
+        })
+    ]
 };
