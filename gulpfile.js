@@ -4,27 +4,57 @@
  * with webpack.main.config.js
  */
 
-var gulp = require("gulp"),
+var path = require("path"),
+    gulp = require("gulp"),
+    gutil = require("gulp-util"),
+    through = require("through2"),
     webpack = require("webpack"),
-    MAIN_CONFIGURATION = require("./tools/webpack/webpack.main.config.js");
+    /**
+     * Merging different webpack configuration
+     */
+    merge = require("webpack-merge"),
+    MAIN_CONFIGURATION = require("./tools/webpack/webpack.main.config.js"),
+    DEVELOPMENT_CONFIGURATION = require("./tools/webpack/webpack.development.config.js");
 
-// loop through all files 
-var addedFiles = [];
+// Determine npm target when it initially run 
+// this is used to determine whether `production` or `development`
+const TARGET = process.env.npm_lifecycle_event || "development";
+
+// Prepare global variables here so that webpack configuration
+// can be prepared inside async gulp task
+var WEBPACK_CONFIGURATION = {};
+
+function resetWebpackConfiguration() {
+    WEBPACK_CONFIGURATION = {
+        // setting the main context path
+        context : path.join(__dirname, 'webapp/')
+    };
+    WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, MAIN_CONFIGURATION);
+    if (TARGET === "development") {
+        WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, DEVELOPMENT_CONFIGURATION);
+    } 
+}
 
 // Using gulp to find all webpack configuration in the applications
 // generate new webpack configuration and run dev-server
-gulp.task('webpack:build', function(){
+gulp.task('webpack-merge-configs', function(callback){
+    // reset webpack configuration
+    resetWebpackConfiguration();
+
     return gulp.src(["**/config.js"], {
         cwd : "webapp"
-    }).on("data", function(file){
-        addedFiles.push(file.path);
-    }).on("end", function(){
-        // merge every webpack 
-        addedFiles.forEach(function(item) {
-            var req = require(item);
-            console.log(req);
-        });
+    }).pipe(through.obj(function(file, enc, cb){
+        // get the webpack configuration and merge
+        // with current main configuration
+        WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, require(file.path));
+
+        cb();
+    })).on("end", function(){
     });
+});
+
+gulp.task('webpack:build', ['webpack-merge-configs'], function(){
+    gutil.log(WEBPACK_CONFIGURATION);
 });
 
 

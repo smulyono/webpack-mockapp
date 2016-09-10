@@ -15,6 +15,8 @@
   "laxcomma" : true,
   "laxbreak" : true,
   "newcap" : false,
+  "node" : true,
+  "esversion": 6,
   "globals" : {
     "define" : false,
     "_" : false,
