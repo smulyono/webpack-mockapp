@@ -8,7 +8,8 @@ module.exports = {
         alias : {
             "jquery" : "assets/js/vendor/jquery.min",
             "underscore" : "assets/js/vendor/underscore",
-            "backbone" : "assets/js/vendor/backbone"
+            "backbone" : "assets/js/vendor/backbone",
+            "CircleComponent" : "common/components/common.circle.component"
         },
         moduleDirectories : [
             "assets/js/vendor"
@@ -28,6 +29,7 @@ module.exports = {
     },
     plugins : [
         new webpack.ProvidePlugin({
+            _ : "underscore",
             $ : "jquery",
             jQuery : "jquery",
             Highcharts : "highcharts"

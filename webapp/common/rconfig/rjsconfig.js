@@ -4,7 +4,9 @@ require.config({
         "backbone" : "assets/js/vendor/backbone",
         "underscore" : "assets/js/vendor/underscore",
         "text" : "assets/js/vendor/text",
-        "highcharts" : "assets/js/vendor/highcharts"
+        "highcharts" : "assets/js/vendor/highcharts",
+        // -- COMPONENTS
+        "CircleComponent" : "common/components/common.circle.component"
     },
     shim: {
         "backbone" : {

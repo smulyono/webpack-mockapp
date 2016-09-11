@@ -3,7 +3,7 @@ define(function(require) {
     var Backbone = require("backbone"),
         homeTemplate = require("text!homeTemplatePath/home.template.html"),
         BoxComponent = require("homeBoxComponent"),
-        CircleComponent = require("homeCircleComponent");
+        CircleComponent = require("CircleComponent");
         
     var homeView = Backbone.View.extend({
         initialize : function() {
@@ -11,7 +11,8 @@ define(function(require) {
         },
         events : {
             "click .drawingarea__button--circle" : "drawCircle",
-            "click .drawingarea__button--box"    : "drawBox"
+            "click .drawingarea__button--box"    : "drawBox",
+            "click .backToPreviousPage" : "backToPreviousPage"
         },
         render : function(){
             $(this.el).html(homeTemplate);
@@ -22,6 +23,9 @@ define(function(require) {
         },
         drawCircle : function() {
             this.$(".drawingarea__bottom").html(new CircleComponent().render().el);
+        },
+        backToPreviousPage : function() {
+            window.location.href="../login";
         }
     });
 

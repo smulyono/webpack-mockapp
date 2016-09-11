@@ -24,10 +24,12 @@ module.exports = {
         ]
     },
     plugins : [
-        new webpack.optimize.DedupePlugin(),
+        // https://github.com/webpack/webpack/issues/1943
+        // multiple vendor chunks 
         new webpack.optimize.CommonsChunkPlugin({
-            name : "vendors"
+            names : ["common", "vendors"]
         }),
+        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
             minimize:true
         })

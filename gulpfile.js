@@ -20,7 +20,7 @@ var path = require("path"),
 // Determine npm target when it initially run 
 // this is used to determine whether `production` or `development`
 const TARGET = process.env.npm_lifecycle_event || "development",
-    BUILD_DIR = path.resolve(path.join(__dirname, 'webapp/'));
+    BUILD_DIR = path.resolve(path.join(__dirname, 'webapp/build/'));
 
 // Prepare global variables here so that webpack configuration
 // can be prepared inside async gulp task
@@ -36,7 +36,8 @@ function resetWebpackConfiguration() {
         },
         // setting the output path
         output : {
-            path : BUILD_DIR
+            path : BUILD_DIR,
+            filename : "[name]/app.js"
         }
     };
     WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, MAIN_CONFIGURATION);
@@ -65,7 +66,7 @@ gulp.task('webpack-merge-configs', function(callback){
 
 // cleaning up old directory
 gulp.task('clean:build', function() {
-    return gulp.src(["**/*_bundle.js"], {
+    return gulp.src(["*"], {
         cwd : BUILD_DIR
     }).pipe(clean());
 });
