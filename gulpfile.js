@@ -3,6 +3,7 @@
  * all webpack configuration. Merge them appropriately and combine
  * with webpack.main.config.js
  */
+"use strict";
 
 var path = require("path"),
     gulp = require("gulp"),
@@ -10,17 +11,26 @@ var path = require("path"),
     clean = require("gulp-clean"),
     through = require("through2"),
     webpack = require("webpack"),
+    webpackDevServer = require("webpack-dev-server"),
     /**
      * Merging different webpack configuration
      */
     merge = require("webpack-merge"),
     MAIN_CONFIGURATION = require("./tools/webpack/webpack.main.config.js"),
-    DEVELOPMENT_CONFIGURATION = require("./tools/webpack/webpack.development.config.js");
+    WebpackDevelopmentUtil = require("./tools/webpack/webpack.development.js");
 
 // Determine npm target when it initially run 
 // this is used to determine whether `production` or `development`
 const TARGET = process.env.npm_lifecycle_event || "development",
-    BUILD_DIR = path.resolve(path.join(__dirname, 'webapp/build/'));
+    PROJECT_DIR = path.resolve(path.join(__dirname), 'webapp'),
+    BUILD_DIR = path.resolve(path.join(__dirname, 'webapp/build/')),
+    // development 
+    EXCLUDE_DEV_ENTRY = {
+        "vendors" : true,
+        "common"  : true
+    },
+    DEVELOPMENT_PORT = 3546,
+    DEVELOPMENT_HOST = 'localhost';
 
 // Prepare global variables here so that webpack configuration
 // can be prepared inside async gulp task
@@ -41,9 +51,6 @@ function resetWebpackConfiguration() {
         }
     };
     WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, MAIN_CONFIGURATION);
-    if (TARGET === "development") {
-        WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, DEVELOPMENT_CONFIGURATION);
-    } 
 }
 
 // Using gulp to find all webpack configuration in the applications
@@ -83,5 +90,24 @@ gulp.task('webpack:build', ['clean:build', 'webpack-merge-configs'], function(){
     });
 });
 
+gulp.task('webpack:development', ['webpack-merge-configs'], function(){
+    gutil.log('-- Preparing development --');
+    // iterate on each app entry
+    let appEntry = WEBPACK_CONFIGURATION.entry;
+    for (let appKey in appEntry) {
+        if (appEntry.hasOwnProperty(appKey) && 
+            !EXCLUDE_DEV_ENTRY.hasOwnProperty(appKey)) {
+            let element = appEntry[appKey];
+            let newEntry = WebpackDevelopmentUtil.buildEntry(element, DEVELOPMENT_PORT, DEVELOPMENT_HOST);
+            appEntry[appKey] = newEntry;
+        }
+    }
+    // add the development configuration
+    WEBPACK_CONFIGURATION = merge(WEBPACK_CONFIGURATION, WebpackDevelopmentUtil.developmentConfiguration);
+
+    // run the web pack dev server with new configuration
+    gutil.log(WEBPACK_CONFIGURATION);
+});
 
 gulp.task('default', ["webpack:build"]);
+gulp.task('dev', ["webpack:development"]);
